@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nexora.Identity.Application\Nexora.Identity.Application.csproj" />
+    <ProjectReference Include="..\Nexora.Identity.Infrastructure\Nexora.Identity.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

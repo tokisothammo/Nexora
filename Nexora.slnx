@@ -5,4 +5,10 @@
     <Project Path="src/Nexora.Security/Nexora.Security.csproj" />
     <Project Path="src/Nexora.Shared/Nexora.Shared.csproj" />
   </Folder>
+  <Folder Name="/src/Identity/">
+    <Project Path="src/Identity/Nexora.Identity.Api/Nexora.Identity.Api.csproj" />
+    <Project Path="src/Identity/Nexora.Identity.Application/Nexora.Identity.Application.csproj" />
+    <Project Path="src/Identity/Nexora.Identity.Domain/Nexora.Identity.Domain.csproj" />
+    <Project Path="src/Identity/Nexora.Identity.Infrastructure/Nexora.Identity.Infrastructure.csproj" />
+  </Folder>
 </Solution>
