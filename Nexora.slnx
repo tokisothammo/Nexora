@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Nexora.Contracts/Nexora.Contracts.csproj" />
+    <Project Path="src/Nexora.Events/Nexora.Events.csproj" />
+    <Project Path="src/Nexora.Security/Nexora.Security.csproj" />
+    <Project Path="src/Nexora.Shared/Nexora.Shared.csproj" />
+  </Folder>
+</Solution>
