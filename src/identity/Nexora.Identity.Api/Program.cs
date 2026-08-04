@@ -1,19 +1,41 @@
+using Nexora.Identity.Application.Features.Users.CreateUser;
+using Nexora.Identity.Domain.Repositories;
+using Nexora.Identity.Infrastructure.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddOpenApi();
+// =====================================
+// Services
+// =====================================
+
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Dependency Injection
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<CreateUserHandler>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// =====================================
+// Middleware
+// =====================================
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-// NEXORA Home Endpoint
+// =====================================
+// Endpoints
+// =====================================
+
+// Temporary platform health endpoint
 app.MapGet("/", () =>
 {
     return Results.Ok(new
@@ -24,5 +46,8 @@ app.MapGet("/", () =>
         Message = "Welcome to the NEXORA Platform!"
     });
 });
+
+// API Controllers
+app.MapControllers();
 
 app.Run();

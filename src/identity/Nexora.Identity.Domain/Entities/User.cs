@@ -1,47 +1,84 @@
-﻿namespace Nexora.Identity.Domain.Entities;
+﻿using Nexora.Identity.Domain.Enums;
+
+namespace Nexora.Identity.Domain.Entities;
 
 public class User
 {
     public Guid Id { get; private set; }
 
-    public string Username { get; private set; } = string.Empty;
+    public string FirstName { get; private set; } = string.Empty;
 
-    public string Email { get; private set; } = string.Empty;
+    public string LastName { get; private set; } = string.Empty;
 
     public string PhoneNumber { get; private set; } = string.Empty;
 
+    public string? Email { get; private set; }
+
     public string PasswordHash { get; private set; } = string.Empty;
 
-    public bool IsActive { get; private set; }
+    public string? Gender { get; private set; }
+
+    public DateTime? DateOfBirth { get; private set; }
+
+    public string? ProfilePhoto { get; private set; }
+
+    public UserStatus Status { get; private set; }
+
+    public bool IsVerified { get; private set; }
+
+    public DateTime? LastLogin { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
+
+    public DateTime UpdatedAt { get; private set; }
+
+    public DateTime? DeletedAt { get; private set; }
+
 
     private User()
     {
     }
-
     public User(
-        string username,
-        string email,
-        string phoneNumber,
-        string passwordHash)
+    string firstName,
+    string lastName,
+    string phoneNumber,
+    string? email,
+    string passwordHash)
     {
         Id = Guid.NewGuid();
-        Username = username;
-        Email = email;
-        PhoneNumber = phoneNumber;
-        PasswordHash = passwordHash;
-        IsActive = true;
-        CreatedAt = DateTime.UtcNow;
-    }
 
-    public void Deactivate()
-    {
-        IsActive = false;
+        FirstName = firstName;
+        LastName = lastName;
+        PhoneNumber = phoneNumber;
+        Email = email;
+        PasswordHash = passwordHash;
+
+        Status = UserStatus.Pending;
+        IsVerified = false;
+
+        CreatedAt = DateTime.UtcNow;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public void Activate()
     {
-        IsActive = true;
+        Status = UserStatus.Active;
+        IsVerified = true;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+
+    public void Suspend()
+    {
+        Status = UserStatus.Suspended;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+
+    public void Deactivate()
+    {
+        Status = UserStatus.Deactivated;
+        UpdatedAt = DateTime.UtcNow;
+        DeletedAt = DateTime.UtcNow;
     }
 }

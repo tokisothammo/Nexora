@@ -16,11 +16,12 @@ public class CreateUserHandler
     public async Task HandleAsync(CreateUserCommand command)
     {
         var user = new User(
-            command.Username,
-            command.Email,
-            command.PhoneNumber,
-            command.Password);
-
+        command.FirstName,
+        command.LastName,
+        command.PhoneNumber,
+        command.Email,
+        command.PasswordHash
+);
         await _userRepository.AddAsync(user);
     }
 }
