@@ -4,6 +4,8 @@ using Nexora.Identity.Application.Features.Users.GetUsers;
 using Nexora.Identity.Domain.Repositories;
 using Nexora.Identity.Infrastructure.Persistence;
 using Nexora.Identity.Infrastructure.Repositories;
+using Nexora.Identity.Application.Security;
+using Nexora.Identity.Infrastructure.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,7 @@ builder.Services.AddDbContext<IdentityDbContext>(options =>
 
 // Dependency Injection
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<CreateUserHandler>();
 builder.Services.AddScoped<GetUsersHandler>();
 
