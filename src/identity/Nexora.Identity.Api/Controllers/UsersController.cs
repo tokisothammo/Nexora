@@ -1,31 +1,45 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nexora.Identity.Application.Features.Users.CreateUser;
+using Nexora.Identity.Application.Features.Users.GetUsers;
 
 namespace Nexora.Identity.Api.Controllers;
 
 [ApiController]
 [Route("api/users")]
-public class UsersController : ControllerBase
+public sealed class UsersController : ControllerBase
 {
-    private readonly CreateUserHandler _handler;
+    private readonly CreateUserHandler _createUserHandler;
+    private readonly GetUsersHandler _getUsersHandler;
 
-    public UsersController(CreateUserHandler handler)
+    public UsersController(
+        CreateUserHandler createUserHandler,
+        GetUsersHandler getUsersHandler)
     {
-        _handler = handler;
+        _createUserHandler = createUserHandler;
+        _getUsersHandler = getUsersHandler;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyList<UserListItem>>> GetAll()
+    {
+        var users = await _getUsersHandler.HandleAsync();
+
+        return Ok(users);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateUserCommand command)
+    public async Task<IActionResult> Create(
+        [FromBody] CreateUserCommand command)
     {
-        await _handler.HandleAsync(command);
+        await _createUserHandler.HandleAsync(command);
 
         return Ok(new
         {
             Message = "User processed successfully.",
-            FirstName = command.FirstName,
-            LastName = command.LastName,
-            PhoneNumber = command.PhoneNumber,
-            Email = command.Email
+            command.FirstName,
+            command.LastName,
+            command.PhoneNumber,
+            command.Email
         });
     }
 }

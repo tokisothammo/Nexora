@@ -16,15 +16,11 @@ public class User
 
     public string PasswordHash { get; private set; } = string.Empty;
 
-    public string? Gender { get; private set; }
-
-    public DateTime? DateOfBirth { get; private set; }
-
-    public string? ProfilePhoto { get; private set; }
-
     public UserStatus Status { get; private set; }
 
     public bool IsVerified { get; private set; }
+
+    public string? ProfilePhoto { get; private set; }
 
     public DateTime? LastLogin { get; private set; }
 
@@ -32,18 +28,22 @@ public class User
 
     public DateTime UpdatedAt { get; private set; }
 
-    public DateTime? DeletedAt { get; private set; }
+    public Guid? CreatedBy { get; private set; }
 
+    public Guid? UpdatedBy { get; private set; }
+
+    public DateTime? DeletedAt { get; private set; }
 
     private User()
     {
     }
+
     public User(
-    string firstName,
-    string lastName,
-    string phoneNumber,
-    string? email,
-    string passwordHash)
+        string firstName,
+        string lastName,
+        string phoneNumber,
+        string? email,
+        string passwordHash)
     {
         Id = Guid.NewGuid();
 
@@ -67,13 +67,11 @@ public class User
         UpdatedAt = DateTime.UtcNow;
     }
 
-
     public void Suspend()
     {
         Status = UserStatus.Suspended;
         UpdatedAt = DateTime.UtcNow;
     }
-
 
     public void Deactivate()
     {

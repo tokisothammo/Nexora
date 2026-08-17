@@ -1,37 +1,65 @@
-﻿using Nexora.Identity.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Nexora.Identity.Domain.Entities;
 using Nexora.Identity.Domain.Repositories;
+using Nexora.Identity.Infrastructure.Persistence;
 
 namespace Nexora.Identity.Infrastructure.Repositories;
 
-public class UserRepository : IUserRepository
+public sealed class UserRepository : IUserRepository
 {
-    public Task AddAsync(User user)
+    private readonly IdentityDbContext _dbContext;
+
+    public UserRepository(IdentityDbContext dbContext)
     {
-        return Task.CompletedTask;
+        _dbContext = dbContext;
     }
 
-    public Task DeleteAsync(Guid id)
+    public async Task AddAsync(User user)
     {
-        return Task.CompletedTask;
+        await _dbContext.Users.AddAsync(user);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<User>> GetAllAsync()
+    public async Task<User?> GetByIdAsync(Guid id)
     {
-        return Task.FromResult<IEnumerable<User>>(new List<User>());
+        return await _dbContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(user => user.Id == id);
     }
 
-    public Task<User?> GetByEmailAsync(string email)
+    public async Task<User?> GetByEmailAsync(string email)
     {
-        return Task.FromResult<User?>(null);
+        return await _dbContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(user => user.Email == email);
     }
 
-    public Task<User?> GetByIdAsync(Guid id)
+    public async Task<IEnumerable<User>> GetAllAsync()
     {
-        return Task.FromResult<User?>(null);
+        return await _dbContext.Users
+            .AsNoTracking()
+            .Where(user => user.DeletedAt == null)
+            .OrderBy(user => user.FirstName)
+            .ThenBy(user => user.LastName)
+            .ToListAsync();
     }
 
-    public Task UpdateAsync(User user)
+    public async Task UpdateAsync(User user)
     {
-        return Task.CompletedTask;
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var user = await _dbContext.Users.FindAsync(id);
+
+        if (user is null)
+        {
+            return;
+        }
+
+        user.Deactivate();
+        await _dbContext.SaveChangesAsync();
     }
 }

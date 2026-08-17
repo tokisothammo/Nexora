@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Nexora.Identity.Application.Features.Users.CreateUser;
+using Nexora.Identity.Application.Features.Users.GetUsers;
 using Nexora.Identity.Domain.Repositories;
+using Nexora.Identity.Infrastructure.Persistence;
 using Nexora.Identity.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +16,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// PostgreSQL / EF Core
+builder.Services.AddDbContext<IdentityDbContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("NexoraDatabase")));
+
 // Dependency Injection
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<CreateUserHandler>();
+builder.Services.AddScoped<GetUsersHandler>();
 
 var app = builder.Build();
 
@@ -32,10 +41,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // =====================================
-// Endpoints
+// Temporary platform heartbeat
 // =====================================
 
-// Temporary platform health endpoint
 app.MapGet("/", () =>
 {
     return Results.Ok(new
@@ -47,7 +55,10 @@ app.MapGet("/", () =>
     });
 });
 
-// API Controllers
+// =====================================
+// Controllers
+// =====================================
+
 app.MapControllers();
 
 app.Run();
