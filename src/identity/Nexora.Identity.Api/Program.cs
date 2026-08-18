@@ -6,6 +6,8 @@ using Nexora.Identity.Infrastructure.Persistence;
 using Nexora.Identity.Infrastructure.Repositories;
 using Nexora.Identity.Application.Security;
 using Nexora.Identity.Infrastructure.Security;
+using Nexora.Identity.Application.Features.Users.Verification.GenerateRegistrationOtp;
+using Nexora.Identity.Application.Features.Users.Verification.VerifyRegistrationOtp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,9 +27,17 @@ builder.Services.AddDbContext<IdentityDbContext>(options =>
 
 // Dependency Injection
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<
+    IUserVerificationRepository,
+    UserVerificationRepository>();
+
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<CreateUserHandler>();
 builder.Services.AddScoped<GetUsersHandler>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IOtpGenerator, OtpGenerator>();
+builder.Services.AddScoped<GenerateRegistrationOtpHandler>();
+builder.Services.AddScoped<VerifyRegistrationOtpHandler>();
 
 var app = builder.Build();
 
@@ -41,7 +51,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 // =====================================
 // Temporary platform heartbeat
