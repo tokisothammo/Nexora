@@ -5,6 +5,7 @@ using Nexora.Identity.Infrastructure.Persistence;
 
 namespace Nexora.Identity.Infrastructure.Repositories;
 
+
 public sealed class UserRepository : IUserRepository
 {
     private readonly IdentityDbContext _dbContext;
@@ -61,5 +62,11 @@ public sealed class UserRepository : IUserRepository
 
         user.Deactivate();
         await _dbContext.SaveChangesAsync();
+    }
+    public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
+    {
+        return await _dbContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(user => user.PhoneNumber == phoneNumber);
     }
 }
