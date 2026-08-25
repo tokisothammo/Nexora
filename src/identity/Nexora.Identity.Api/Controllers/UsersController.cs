@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Nexora.Identity.Application.Features.Users.CreateUser;
 using Nexora.Identity.Application.Features.Users.GetUsers;
 
@@ -19,6 +20,7 @@ public sealed class UsersController : ControllerBase
         _getUsersHandler = getUsersHandler;
     }
 
+    [Authorize(Roles = "ADMIN")]
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<UserListItem>>> GetAll()
     {
@@ -29,17 +31,30 @@ public sealed class UsersController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> Create(
-        [FromBody] CreateUserCommand command)
+     [FromBody] CreateUserCommand command)
     {
-        await _createUserHandler.HandleAsync(command);
-
-        return Ok(new
+        try
         {
-            Message = "User processed successfully.",
-            command.FirstName,
-            command.LastName,
-            command.PhoneNumber,
-            command.Email
-        });
+            var result =
+                await _createUserHandler.HandleAsync(command);
+
+            return Ok(new
+            {
+                Message = "User registered successfully.",
+                result.UserId,
+                command.FirstName,
+                command.LastName,
+                command.PhoneNumber,
+                command.Email,
+                DefaultRole = "CUSTOMER"
+            });
+        }
+        catch (InvalidOperationException exception)
+        {
+            return Conflict(new
+            {
+                Message = exception.Message
+            });
+        }
     }
 }

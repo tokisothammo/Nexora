@@ -16,6 +16,10 @@ public class IdentityDbContext : DbContext
     public DbSet<UserVerification> UserVerifications
     => Set<UserVerification>();
 
+    public DbSet<Role> Roles => Set<Role>();
+
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(

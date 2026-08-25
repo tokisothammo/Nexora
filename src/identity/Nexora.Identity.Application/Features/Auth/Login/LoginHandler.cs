@@ -7,15 +7,18 @@ namespace Nexora.Identity.Application.Features.Auth.Login;
 public sealed class LoginHandler
 {
     private readonly IUserRepository _userRepository;
+    private readonly IUserRoleRepository _userRoleRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
     public LoginHandler(
         IUserRepository userRepository,
+        IUserRoleRepository userRoleRepository,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator)
     {
         _userRepository = userRepository;
+        _userRoleRepository = userRoleRepository;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
     }
@@ -56,6 +59,11 @@ public sealed class LoginHandler
                 "Invalid phone number or password.");
         }
 
-        return _jwtTokenGenerator.Generate(user);
+        var roleCodes = await _userRoleRepository
+            .GetRoleCodesByUserIdAsync(user.Id);
+
+        return _jwtTokenGenerator.Generate(
+            user,
+            roleCodes);
     }
 }

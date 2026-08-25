@@ -16,7 +16,9 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
         _settings = options.Value;
     }
 
-    public JwtTokenResult Generate(User user)
+    public JwtTokenResult Generate(
+    User user,
+    IReadOnlyCollection<string> roleCodes)
     {
         var issuedAt = DateTime.UtcNow;
         var expiresAt = issuedAt.AddMinutes(
@@ -48,6 +50,13 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
                 ClaimTypes.MobilePhone,
                 user.PhoneNumber)
         };
+
+        foreach (var roleCode in roleCodes)
+        {
+            claims.Add(new Claim(
+                ClaimTypes.Role,
+                roleCode));
+        }
 
         if (!string.IsNullOrWhiteSpace(user.Email))
         {

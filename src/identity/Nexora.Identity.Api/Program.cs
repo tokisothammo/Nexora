@@ -58,6 +58,10 @@ builder.Services.AddScoped<
     IUserVerificationRepository,
     UserVerificationRepository>();
 
+builder.Services.AddScoped<
+    IUserRoleRepository,
+    UserRoleRepository>();
+
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<CreateUserHandler>();
 builder.Services.AddScoped<GetUsersHandler>();

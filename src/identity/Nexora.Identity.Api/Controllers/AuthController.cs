@@ -59,7 +59,11 @@ public sealed class AuthController : ControllerBase
                 ClaimTypes.MobilePhone)?.Value,
 
             Email = User.FindFirst(
-                ClaimTypes.Email)?.Value
+                ClaimTypes.Email)?.Value,
+
+            Roles = User.FindAll(ClaimTypes.Role)
+                .Select(claim => claim.Value)
+                .ToArray()
         });
     }
 }

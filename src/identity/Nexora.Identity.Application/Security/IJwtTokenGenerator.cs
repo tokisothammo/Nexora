@@ -4,7 +4,9 @@ namespace Nexora.Identity.Application.Security;
 
 public interface IJwtTokenGenerator
 {
-    JwtTokenResult Generate(User user);
+    JwtTokenResult Generate(
+        User user,
+        IReadOnlyCollection<string> roleCodes);
 }
 
 public sealed class JwtTokenResult
