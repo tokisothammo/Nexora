@@ -9,4 +9,11 @@ public interface IUserRoleRepository
         Guid userId,
         string roleCode,
         Guid? assignedBy = null);
+
+    Task RemoveRoleByCodeAsync(
+        Guid userId,
+        string roleCode);
+
+    Task<int> CountUsersInRoleAsync(
+        string roleCode);
 }

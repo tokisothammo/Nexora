@@ -1,19 +1,22 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Nexora.Identity.Application.Features.Auth.Login;
 using Nexora.Identity.Application.Features.Users.CreateUser;
 using Nexora.Identity.Application.Features.Users.GetUsers;
-using Nexora.Identity.Domain.Repositories;
-using Nexora.Identity.Infrastructure.Persistence;
-using Nexora.Identity.Infrastructure.Repositories;
-using Nexora.Identity.Application.Security;
-using Nexora.Identity.Infrastructure.Security;
+using Nexora.Identity.Application.Features.Users.Roles.AssignUserRole;
+using Nexora.Identity.Application.Features.Users.Roles.RemoveUserRole;
 using Nexora.Identity.Application.Features.Users.Verification.GenerateRegistrationOtp;
 using Nexora.Identity.Application.Features.Users.Verification.VerifyRegistrationOtp;
-using Nexora.Identity.Application.Features.Auth.Login;
+using Nexora.Identity.Application.Security;
+using Nexora.Identity.Domain.Repositories;
 using Nexora.Identity.Infrastructure.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Nexora.Identity.Infrastructure.Persistence;
+using Nexora.Identity.Infrastructure.Repositories;
+using Nexora.Identity.Infrastructure.Security;
 using System.Security.Claims;
-using Microsoft.OpenApi;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -132,6 +135,8 @@ builder.Services
 //Tokens ends
 
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<AssignUserRoleHandler>();
+builder.Services.AddScoped<RemoveUserRoleHandler>();
 
 var app = builder.Build();
 
